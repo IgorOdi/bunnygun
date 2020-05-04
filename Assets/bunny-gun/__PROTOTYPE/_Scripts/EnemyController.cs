@@ -19,8 +19,10 @@ public class EnemyController : MonoBehaviour {
 
     void Update () {
 
-        if (transform.position.x > 2.5f || transform.position.x < -2.5f)
-            side *= -1;
+        if (transform.position.x > 2.5f)
+            side = -1;
+        else if (transform.position.x < -2.5f)
+            side = 1;
 
         transform.Translate (speed * side * Time.deltaTime, 0, 0);
 

@@ -14,6 +14,7 @@ public class GameOverController : MonoBehaviour {
         canvas.SetActive (true);
         points.text = Points.ToString ();
         Points = 0;
+        Time.timeScale = 0;
     }
 
     public void TryAgain () {

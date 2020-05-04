@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
     private GameObject projectile;
 
     private int side = 0;
+    private bool calledHit;
 
     void Start () {
 
@@ -25,13 +26,19 @@ public class PlayerController : MonoBehaviour {
 
     void Update () {
 
+#if UNITY_EDITOR
+
+        rb.velocity = new Vector2 (Input.GetAxis ("Horizontal") * speed, rb.velocity.y);
+#else
+
         if (Input.GetMouseButton (0)) {
-            side = Camera.main.ScreenToWorldPoint(Input.mousePosition).x > transform.position.x ? 1 : -1;;
+            side = Camera.main.ScreenToWorldPoint (Input.mousePosition).x > transform.position.x ? 1 : -1;;
         } else {
             side = 0;
         }
 
         rb.velocity = new Vector2 (side * speed, rb.velocity.y);
+#endif
         transform.eulerAngles = platform.eulerAngles;
 
         runningTime += Time.deltaTime;
@@ -40,11 +47,16 @@ public class PlayerController : MonoBehaviour {
             Instantiate (projectile, transform.position, Quaternion.identity);
             runningTime = 0;
         }
+
+        if (transform.position.y <= -6 && !calledHit) {
+
+            calledHit = true;
+            OnHit ();
+        }
     }
 
     public void OnHit () {
 
-        Time.timeScale = 0;
         FindObjectOfType<GameOverController> ().ShowGameOver ();
     }
 }
